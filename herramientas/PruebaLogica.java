@@ -6,6 +6,7 @@ import mx.tianguis.cuentas.ExportTexto;
 import mx.tianguis.cuentas.Fechas;
 import mx.tianguis.cuentas.Reporte;
 import mx.tianguis.cuentas.Reportes;
+import mx.tianguis.cuentas.Seleccion;
 import mx.tianguis.cuentas.Totales;
 import mx.tianguis.cuentas.Venta;
 
@@ -26,6 +27,8 @@ public class PruebaLogica {
         totales();
         corteDelDia();
         corteDeLaSemana();
+        seleccionDeDias();
+        reporteAMedida();
 
         System.out.println();
         if (fallos == 0) {
@@ -200,6 +203,133 @@ public class PruebaLogica {
         igual("semana vacia suma cero", 0L, vacio.granTotal());
         contiene("semana vacia lo dice", ExportTexto.armar(vacio),
                 "No hubo ventas en esta semana.");
+    }
+
+    // ------------------------------------------------------ seleccion de dias
+
+    private static void seleccionDeDias() {
+        titulo("Seleccion de dias");
+
+        Seleccion unDia = Seleccion.deUnDia("2026-08-08", "Hoy");
+        igual("un dia trae un dia", 1, unDia.dias.size());
+        igual("un dia se describe completo", "Sabado 8 de agosto de 2026",
+                unDia.descripcionDias());
+
+        Seleccion rango = Seleccion.deRango("2026-08-03", "2026-08-09", "");
+        igual("el rango trae los siete dias", 7, rango.dias.size());
+        igual("el rango empieza donde debe", "2026-08-03", rango.primerDia());
+        igual("el rango termina donde debe", "2026-08-09", rango.ultimoDia());
+        cierto("el rango es continuo", rango.sonSeguidos());
+        igual("el rango se describe", "Del 3 de agosto de 2026 al 9 de agosto de 2026",
+                rango.descripcionDias());
+
+        // Al reves da lo mismo: se ordena solo.
+        Seleccion alReves = Seleccion.deRango("2026-08-09", "2026-08-03", "");
+        igual("el rango al reves trae lo mismo", 7, alReves.dias.size());
+        igual("el rango al reves empieza igual", "2026-08-03", alReves.primerDia());
+
+        Seleccion cruzaMes = Seleccion.deRango("2026-07-30", "2026-08-02", "");
+        igual("cruza el cambio de mes", 4, cruzaMes.dias.size());
+
+        List<String> sueltos = new ArrayList<String>();
+        sueltos.add("2026-08-08");
+        sueltos.add("2026-08-01");
+        sueltos.add("2026-08-15");
+        Seleccion elegidos = Seleccion.deDias(sueltos, "");
+        igual("los dias sueltos se guardan", 3, elegidos.dias.size());
+        igual("los dias sueltos se ordenan", "2026-08-01", elegidos.primerDia());
+        cierto("los dias sueltos no son continuos", !elegidos.sonSeguidos());
+        contiene("los dias sueltos se cuentan", elegidos.descripcionDias(), "3 días elegidos");
+
+        List<String> lunes = new ArrayList<String>();
+        lunes.add("2026-08-03");
+        lunes.add("2026-08-17");
+        Seleccion semanas = Seleccion.deSemanas(lunes, "");
+        igual("dos semanas son catorce dias", 14, semanas.dias.size());
+        igual("dos semanas se agrupan por semana", Seleccion.POR_SEMANA, semanas.agrupacion);
+        igual("las semanas escogidas se ven", 2, semanas.semanas().size());
+
+        // El filtro por artesano.
+        Seleccion soloA = Seleccion.deRango("2026-08-03", "2026-08-09", "");
+        soloA.quien = Seleccion.SOLO_A;
+        cierto("solo A deja pasar a A", soloA.incluye(venta("2026-08-05", "A", "x", 1, 100)));
+        cierto("solo A no deja pasar a B", !soloA.incluye(venta("2026-08-05", "B", "x", 1, 100)));
+        cierto("solo A rechaza un dia de fuera",
+                !soloA.incluye(venta("2026-09-01", "A", "x", 1, 100)));
+        cierto("solo A incluye a A", soloA.incluyeA());
+        cierto("solo A excluye a B", !soloA.incluyeB());
+        contiene("solo A se describe", soloA.descripcionQuien("Angel", "Bryan"), "Sólo Angel (A)");
+        contiene("el archivo dice de quien es", soloA.nombreArchivo(), "ventas-A-2026-08-03");
+    }
+
+    // ------------------------------------------------------- reporte a medida
+
+    private static void reporteAMedida() {
+        titulo("Reporte a la medida");
+        List<Venta> ventas = new ArrayList<Venta>();
+        ventas.add(venta("2026-08-03", "A", "Aretes de chaquira", 2, 12000));
+        ventas.add(venta("2026-08-03", "B", "Pulsera tejida", 1, 8000));
+        ventas.add(venta("2026-08-05", "A", "Aretes de chaquira", 3, 12000));
+        ventas.add(venta("2026-08-08", "B", "Bolsa bordada", 1, 45000));
+        ventas.add(venta("2026-08-08", "A", "Collar de semillas", 1, 25000));
+        // Fuera del rango que se va a pedir.
+        ventas.add(venta("2026-08-20", "A", "Aretes de chaquira", 9, 12000));
+
+        // --- Dias sueltos: solo el lunes y el sabado.
+        List<String> sueltos = new ArrayList<String>();
+        sueltos.add("2026-08-03");
+        sueltos.add("2026-08-08");
+        Seleccion s = Seleccion.deDias(sueltos, "");
+        Reporte r = Reportes.personalizado(ventas, s, "Angel", "Bryan", "Artesanias");
+
+        igual("titulo generico", "REPORTE DE VENTAS", r.titulo);
+        igual("suma solo los dias elegidos", 24000L + 8000L + 45000L + 25000L, r.granTotal());
+        contiene("dice cuantos dias", ExportTexto.armar(r), "2 días");
+        contiene("no se cuela el dia de fuera", ExportTexto.armar(r), "Angel (A): $490.00");
+
+        // --- Un solo artesano.
+        Seleccion soloB = Seleccion.deRango("2026-08-03", "2026-08-09", "");
+        soloB.quien = Seleccion.SOLO_B;
+        Reporte rb = Reportes.personalizado(ventas, soloB, "Angel", "Bryan", "Artesanias");
+        igual("solo B suma lo de B", 8000L + 45000L, rb.granTotal());
+        igual("solo B trae un renglon de total mas el destacado", 2, rb.totales.size());
+        String textoB = ExportTexto.armar(rb);
+        contiene("solo B se anuncia", textoB, "Sólo Bryan (B)");
+        cierto("solo B no menciona a Angel", !textoB.contains("Angel (A):"));
+        contiene("solo B trae su pieza", textoB, "Bolsa bordada");
+        cierto("solo B no trae piezas de Angel", !textoB.contains("Collar de semillas"));
+
+        // --- Una semana completa se sigue llamando corte de la semana.
+        Seleccion semana = Seleccion.deLaSemanaDe("2026-08-08", "");
+        Reporte rs = Reportes.personalizado(ventas, semana, "Angel", "Bryan", "Artesanias");
+        igual("una semana completa se reconoce", "CORTE DE LA SEMANA", rs.titulo);
+        igual("la semana suma bien", 138000L, rs.granTotal());
+
+        // --- Un solo dia se lee pieza por pieza.
+        Seleccion dia = Seleccion.deUnDia("2026-08-08", "");
+        Reporte rd = Reportes.personalizado(ventas, dia, "Angel", "Bryan", "Artesanias");
+        igual("un dia se llama corte del dia", "CORTE DEL DÍA", rd.titulo);
+        igual("un dia suma lo suyo", 45000L + 25000L, rd.granTotal());
+        igual("un dia trae las dos secciones", 2, rd.secciones.size());
+
+        // --- Agrupado por semana sobre varias semanas.
+        Seleccion dosSemanas = Seleccion.deRango("2026-08-03", "2026-08-23", "");
+        dosSemanas.agrupacion = Seleccion.POR_SEMANA;
+        Reporte rw = Reportes.personalizado(ventas, dosSemanas, "Angel", "Bryan", "Artesanias");
+        contiene("agrupa por semana", ExportTexto.armar(rw), "SEMANA POR SEMANA");
+        igual("suma las tres semanas", 138000L + 108000L, rw.granTotal());
+        igual("solo las semanas con venta salen", 2, rw.secciones.get(0).filas.size());
+
+        // --- Sin agrupacion: solo el detalle de cada artesano.
+        Seleccion resumen = Seleccion.deRango("2026-08-03", "2026-08-09", "");
+        resumen.agrupacion = Seleccion.RESUMEN;
+        Reporte rr = Reportes.personalizado(ventas, resumen, "Angel", "Bryan", "Artesanias");
+        igual("el resumen trae solo los dos detalles", 2, rr.secciones.size());
+        igual("el resumen suma igual", 138000L, rr.granTotal());
+
+        // --- Nada seleccionado no revienta.
+        Reporte vacio = Reportes.personalizado(ventas, new Seleccion(), "Angel", "Bryan", "A");
+        igual("sin dias suma cero", 0L, vacio.granTotal());
     }
 
     // ---------------------------------------------------------------- utiles

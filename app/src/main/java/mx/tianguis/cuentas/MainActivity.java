@@ -272,12 +272,24 @@ public class MainActivity extends Activity {
                 startActivity(i);
             }
         });
+        findViewById(R.id.btn_exportar).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirExportar();
+            }
+        });
         findViewById(R.id.btn_compartir).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Compartir.menu(MainActivity.this, Reportes.delDia(MainActivity.this, fecha));
             }
         });
+    }
+
+    private void abrirExportar() {
+        Intent i = new Intent(this, ExportarActivity.class);
+        i.putExtra(ExportarActivity.EXTRA_FECHA, fecha);
+        startActivity(i);
     }
 
     // ------------------------------------------------------------- refrescado
@@ -311,8 +323,9 @@ public class MainActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, 1, 0, R.string.menu_semana).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(0, 2, 1, R.string.menu_compartir).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-        menu.add(0, 3, 2, R.string.menu_nombres).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, 4, 1, R.string.titulo_exportar).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, 2, 2, R.string.menu_compartir).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, 3, 3, R.string.menu_nombres).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         return true;
     }
 
@@ -329,6 +342,9 @@ public class MainActivity extends Activity {
                 return true;
             case 3:
                 editarNombres();
+                return true;
+            case 4:
+                abrirExportar();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -31,6 +31,7 @@ javac -nowarn -encoding UTF-8 -d "$TMP" -classpath "$ANDROID_JAR" \
     "$FUENTE/mx/tianguis/cuentas/Fechas.java" \
     "$FUENTE/mx/tianguis/cuentas/Reporte.java" \
     "$FUENTE/mx/tianguis/cuentas/ExportTexto.java" \
+    "$FUENTE/mx/tianguis/cuentas/Seleccion.java" \
     "$FUENTE/mx/tianguis/cuentas/Reportes.java" \
     "$FUENTE/mx/tianguis/cuentas/Prefs.java" \
     "$FUENTE/mx/tianguis/cuentas/Db.java" \

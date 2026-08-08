@@ -174,6 +174,38 @@ public class Db extends SQLiteOpenHelper {
         return lista;
     }
 
+    /** Un dia que tuvo movimiento, con lo que se junto ese dia. */
+    public static class DiaConTotal {
+        public String fecha;
+        public long total;
+        public int piezas;
+    }
+
+    /**
+     * Los dias en los que si hubo ventas, del mas reciente al mas viejo. Es lo
+     * que se ofrece al armar un reporte a la medida: no tiene caso mostrar
+     * dias en los que no se vendio nada.
+     */
+    public List<DiaConTotal> diasConVentas() {
+        List<DiaConTotal> lista = new ArrayList<DiaConTotal>();
+        Cursor c = getReadableDatabase().rawQuery(
+                "SELECT " + COL_FECHA + ", SUM(" + COL_CANTIDAD + " * " + COL_PRECIO + "), "
+                        + "SUM(" + COL_CANTIDAD + ") FROM " + TABLA
+                        + " GROUP BY " + COL_FECHA + " ORDER BY " + COL_FECHA + " DESC", null);
+        try {
+            while (c.moveToNext()) {
+                DiaConTotal d = new DiaConTotal();
+                d.fecha = c.getString(0);
+                d.total = c.getLong(1);
+                d.piezas = c.getInt(2);
+                lista.add(d);
+            }
+        } finally {
+            c.close();
+        }
+        return lista;
+    }
+
     /**
      * Ultimo precio con el que se vendio una descripcion, para rellenarlo solo.
      * Devuelve -1 si esa pieza nunca se ha vendido.

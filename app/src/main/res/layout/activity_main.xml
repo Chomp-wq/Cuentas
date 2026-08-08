@@ -320,12 +320,29 @@
                 android:id="@+id/btn_semana"
                 android:layout_width="0dp"
                 android:layout_height="46dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginRight="4dp"
                 android:layout_weight="1"
                 android:background="@drawable/boton_plano"
-                android:text="@string/menu_semana"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:text="@string/titulo_semana"
                 android:textColor="@color/primario"
-                android:textSize="14sp"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_exportar"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_weight="1"
+                android:background="@drawable/boton_plano"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:text="@string/menu_exportar"
+                android:textColor="@color/primario"
+                android:textSize="13sp"
                 android:textStyle="bold" />
 
             <Button
@@ -333,10 +350,12 @@
                 style="@style/BotonPrincipal"
                 android:layout_width="0dp"
                 android:layout_height="46dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="4dp"
                 android:layout_weight="1"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
                 android:text="@string/menu_compartir"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>
 

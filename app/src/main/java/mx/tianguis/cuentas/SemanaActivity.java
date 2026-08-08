@@ -120,9 +120,21 @@ public class SemanaActivity extends Activity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        menu.add(0, 1, 0, R.string.titulo_exportar);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
+            return true;
+        }
+        if (item.getItemId() == 1) {
+            Intent i = new Intent(this, ExportarActivity.class);
+            i.putExtra(ExportarActivity.EXTRA_FECHA, lunes);
+            startActivity(i);
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -25,6 +25,12 @@
             android:label="@string/titulo_semana"
             android:parentActivityName=".MainActivity" />
 
+        <activity
+            android:name=".ExportarActivity"
+            android:exported="false"
+            android:label="@string/titulo_exportar"
+            android:parentActivityName=".MainActivity" />
+
         <!-- Proveedor propio para compartir los archivos generados (texto, PNG, PDF)
              sin depender de AndroidX FileProvider. -->
         <provider

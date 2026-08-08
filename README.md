@@ -11,7 +11,7 @@ tiene cuentas de usuario.
 
 ## Cómo instalarla
 
-El APK ya compilado está en **`apk/cuentas-tianguis-1.0.apk`**.
+El APK ya compilado está en **`apk/cuentas-tianguis-1.1.apk`**.
 
 1. Copia ese archivo al teléfono (por cable, WhatsApp o Drive).
 2. Ábrelo desde el teléfono. Android va a pedir permiso para *instalar
@@ -50,6 +50,33 @@ El botón **Ver semana** abre el corte semanal (de lunes a domingo):
 - Abajo están los totales de la semana por artesano y el **total de la
   semana**.
 - Las flechas `◀ ▶` cambian de semana.
+
+### Exportar reportes a la medida
+
+El botón **Exportar** abre una pantalla para armar el reporte que quieras, sin
+quedarte con sólo "el día" o "la semana". Se arma en tres pasos:
+
+**1. ¿De qué días?**
+
+| Opción | Qué hace |
+|---|---|
+| Hoy · Ayer | Un solo día. |
+| Esta semana · Semana pasada | La semana completa, de lunes a domingo. |
+| Este mes · Mes pasado | El mes entero. |
+| Entre dos fechas… | Elige el día de inicio y el de fin en el calendario. Sirve para quincenas, puentes, ferias de varios días, lo que sea. |
+| Elegir días sueltos… | Una lista con casillas de los días que sí tuvieron ventas. Marca los que quieras aunque no sean seguidos: por ejemplo, sólo los sábados del mes. |
+| Elegir semanas… | Lo mismo pero por semanas completas, para juntar varias semanas que no van seguidas. |
+| Todo lo anotado | Desde la primera venta hasta la última. |
+
+**2. ¿De quién?** — **Los dos**, **sólo A (Angel)** o **sólo B (Bryan)**.
+Cuando eliges a uno solo, el reporte deja de mostrar la columna del otro y los
+totales quedan únicamente con lo de esa persona.
+
+**3. ¿Cómo se ordena?** — **Día por día**, **por semana** o **sólo resumen**
+(nada más el detalle de las piezas y los totales, sin desglose de fechas).
+
+Abajo, mientras eliges, se va viendo cuántos días entraron, cuántas piezas y
+cuánto suma. De ahí se comparte igual que todo lo demás: texto, imagen o PDF.
 
 ### Compartir
 
@@ -133,10 +160,13 @@ semana y el armado de los cortes— se prueba en la computadora, sin emulador:
 herramientas/probar.sh
 ```
 
-Cubre el redondeo del dinero en centavos (para que sumar muchos precios nunca
-pierda un centavo), los límites de la semana lunes–domingo, los cambios de mes
-y de año, el agrupado de piezas iguales en el corte semanal y la salida en
-texto de los dos cortes.
+Son 121 comprobaciones. Cubren el redondeo del dinero en centavos (para que
+sumar muchos precios nunca pierda un centavo), los límites de la semana
+lunes–domingo, los cambios de mes y de año, el agrupado de piezas iguales, la
+salida en texto de los cortes y —lo más delicado— la selección de días de los
+reportes a la medida: que un rango al revés se acomode solo, que los días
+sueltos no arrastren días vecinos, que filtrar por un artesano deje fuera
+todo lo del otro y que las sumas cuadren en cada combinación.
 
 ## Cómo está hecho por dentro
 
@@ -148,9 +178,11 @@ texto de los dos cortes.
 │   ├── java/mx/tianguis/cuentas/
 │   │   ├── MainActivity.java       la cuenta del día
 │   │   ├── SemanaActivity.java     el corte de la semana
+│   │   ├── ExportarActivity.java   armar un reporte a la medida
 │   │   ├── DialogoVenta.java       corregir o borrar una venta
 │   │   ├── Db.java                 base de datos SQLite
 │   │   ├── Venta.java / Totales.java
+│   │   ├── Seleccion.java          qué días, de quién y cómo se agrupa
 │   │   ├── Dinero.java             pesos y centavos
 │   │   ├── Fechas.java             fechas en español, semana lunes–domingo
 │   │   ├── Reporte.java            el corte, en abstracto

@@ -17,6 +17,18 @@
         <item name="android:letterSpacing">0.06</item>
     </style>
 
+    <!-- Botón de opción de la pantalla de exportar: se prende al elegirlo. -->
+    <style name="Opcion">
+        <item name="android:layout_height">46dp</item>
+        <item name="android:background">@drawable/opcion</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:textColor">@color/primario</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="BotonPrincipal">
         <item name="android:background">@drawable/boton_principal</item>
         <item name="android:textColor">@color/blanco</item>

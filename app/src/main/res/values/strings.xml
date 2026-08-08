@@ -33,6 +33,36 @@
     <string name="compartir_pdf">PDF</string>
     <string name="compartir_pdf_desc">Documento formal para imprimir o archivar</string>
 
+    <!-- Pantalla de exportar reportes -->
+    <string name="titulo_exportar">Exportar reporte</string>
+    <string name="menu_exportar">Exportar</string>
+    <string name="que_dias">¿DE QUÉ DÍAS?</string>
+    <string name="de_quien">¿DE QUIÉN?</string>
+    <string name="como_se_ordena">¿CÓMO SE ORDENA?</string>
+    <string name="los_dos">Los dos</string>
+    <string name="rango_hoy">Hoy</string>
+    <string name="rango_ayer">Ayer</string>
+    <string name="rango_esta_semana">Esta semana</string>
+    <string name="rango_semana_pasada">Semana pasada</string>
+    <string name="rango_este_mes">Este mes</string>
+    <string name="rango_mes_pasado">Mes pasado</string>
+    <string name="rango_entre_fechas">Entre dos fechas…</string>
+    <string name="rango_dias_sueltos">Elegir días sueltos…</string>
+    <string name="rango_semanas">Elegir semanas…</string>
+    <string name="rango_todo">Todo lo anotado</string>
+    <string name="orden_dia">Día por día</string>
+    <string name="orden_semana">Por semana</string>
+    <string name="orden_resumen">Sólo resumen</string>
+    <string name="total_reporte">TOTAL DEL REPORTE</string>
+    <string name="compartir_reporte">Compartir reporte</string>
+    <string name="elegir_dias">Elige los días</string>
+    <string name="elegir_semanas">Elige las semanas</string>
+    <string name="listo">Listo</string>
+    <string name="desde_fecha">¿Desde qué día?</string>
+    <string name="hasta_fecha">¿Hasta qué día?</string>
+    <string name="sin_nada_anotado">Todavía no hay ventas anotadas.</string>
+    <string name="nada_que_exportar">No hay ventas en lo que elegiste.</string>
+
     <string name="editar_venta">Editar venta</string>
     <string name="nueva_venta">Nueva venta</string>
     <string name="semana_anterior">Semana anterior</string>
